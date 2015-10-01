@@ -87,12 +87,83 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import Stack
+    
+    st = Stack()
+    visited = []
+    p = dfsRecursive(problem, problem.getStartState(), st, visited, [])
+    return p
+    
+    # pathfind = {}
+    # st.push(problem.getStartState())
+    # iterative approach:
+    # while (not st.isEmpty()):
+    #     point = st.pop() # (x,y)
+    #     if problem.isGoalState(point):
+    #         # print point
+    #         print pathfind
+    #         # print visited
+    #     elif (not (point in visited)):
+    #         visited.append(point)
+    #         # print pathfind, '\n'
+    #         print visited, '\n'
+    #         for child in problem.getSuccessors(point):
+    #             st.push(child[0])
+    #             pathfind[child[0]] = point #this preemptively adds!
+    # util.raiseNotDefined()
+
+def dfsRecursive(problem, vertex, stack, visited, path):
+    if (problem.isGoalState(vertex)):
+        print path
+        return path
+
+    elif (not (vertex in visited)):
+        visited.append(vertex)
+        next_v = problem.getSuccessors(vertex)
+        next_v.reverse() # to keep ordering
+        if len(next_v) > 0:
+            for child in next_v:
+                stack.push(child[0])
+                #copy path to avoid reassignment
+                newpath = []
+                for p in path:
+                    newpath.append(p)
+                newpath.append(child[1])
+                new_v = stack.pop()
+                #get our path if we hit
+                p = dfsRecursive(problem, new_v, stack, visited, newpath)
+                if p: return p
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import Queue
+    q = Queue()
+    mapper = {}
+    q.push(problem.getStartState())
+    mapper[problem.getStartState()] = None
+
+    while (not q.isEmpty()):
+        point = q.pop()
+
+        if (problem.isGoalState(point)):
+            c = point
+            l = []
+            while mapper[c] != None:
+                tup = mapper[c]
+                l.append(tup[1])
+                c = tup[0]
+            l.reverse()
+            print l
+            return l
+
+        else:
+            for child in problem.getSuccessors(point):
+                if (child[0] not in mapper):
+                    q.push(child[0])
+                    mapper[child[0]] = (point, child[1])
+
+    # util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
