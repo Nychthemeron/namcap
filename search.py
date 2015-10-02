@@ -139,9 +139,9 @@ def breadthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     from util import Queue
     q = Queue()
-    mapper = {}
+    mapper = {} #child_point : (parent_point, direction_to_child)
     q.push(problem.getStartState())
-    mapper[problem.getStartState()] = None
+    mapper[problem.getStartState()] = None #root
 
     while (not q.isEmpty()):
         point = q.pop()
@@ -165,10 +165,89 @@ def breadthFirstSearch(problem):
 
     # util.raiseNotDefined()
 
+def iterativeDeepeningSearch(problem):
+    """Iterative Deepening version of DFS"""
+    from util import Stack
+
+    st = Stack()
+    visited = []
+    mapper = {}
+    # max_depth = 100
+    depth = 0
+    while True:
+        result = DLS(problem, problem.getStartState(), st, visited, mapper, 0, depth)
+        if result != None:
+            print result
+            return result
+        else:
+            #clear it and try again
+            st = Stack()
+            visited = []
+            mapper = {}
+            depth += 1
+
+    # util.raiseNotDefined()
+
+def DLS(problem, vertex, stack, visited, path, depth, max_depth):
+    # print "v: ", vertex, " m_d: ", max_depth
+    if (problem.isGoalState(vertex)):
+        # print path
+        return path
+
+    elif (depth is max_depth):
+        return None
+
+    elif (not (vertex in visited)):
+        visited.append(vertex)
+        new_depth = depth + 1
+        next_v = problem.getSuccessors(vertex)
+        next_v.reverse() # to keep ordering
+        if len(next_v) > 0:
+            for child in next_v:
+                stack.push(child[0])
+                #copy path to avoid reassignment
+                newpath = []
+                for p in path:
+                    newpath.append(p)
+                newpath.append(child[1])
+                new_v = stack.pop()
+                #get our path if we hit
+                p = DLS(problem, new_v, stack, visited, newpath, new_depth, max_depth)
+                if p: return p
+
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import PriorityQueue
+
+    pq = PriorityQueue()
+    visited = []
+    start = problem.getStartState()
+    mapper = {}
+    
+    mapper[problem.getStartState()] = None
+    pq.push(problem.getStartState(), 1)
+
+    while (not pq.isEmpty()):
+        point = pq.pop()
+        if problem.isGoalState(point):
+            current = point
+            l = []
+            while mapper[current] != None:
+                tup = mapper[current]
+                l.append(tup[1])
+                current = tup[0]
+            l.reverse()
+            print l
+            return l
+            #util.raiseNotDefined()
+        if not (point in visited):
+            visited.append(point)
+        for child in problem.getSuccessors(point):
+            if not (child[0] in mapper):
+                pq.push(child[0], child[2]) #child has (xy, direction, weight)
+                mapper[child[0]] = point, child[1]
+    # util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
@@ -188,3 +267,4 @@ bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
+ids = iterativeDeepeningSearch
