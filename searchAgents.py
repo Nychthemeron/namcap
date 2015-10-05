@@ -250,6 +250,18 @@ class StayWestSearchAgent(SearchAgent):
         costFn = lambda pos: 2 ** pos[0]
         self.searchType = lambda state: PositionSearchProblem(state, costFn)
 
+class newSearchAgent(SearchAgent):
+    """
+    Greedy search agent:
+
+    goal is usually (1,1) so why not just get closest distance (straight line)
+
+    """
+    def __init__(self):
+        self.searchFunction = search.uniformCostSearch
+        costFn = lambda pos: ((abs(pos[0] - 1) ** 2 + abs(pos[1] - 1) ** 2) ** .5) 
+        self.searchType = lambda state: PositionSearchProblem(state, costFn)
+
 def manhattanHeuristic(position, problem, info={}):
     "The Manhattan distance heuristic for a PositionSearchProblem"
     xy1 = position

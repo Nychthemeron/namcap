@@ -243,7 +243,9 @@ def uniformCostSearch(problem):
             #util.raiseNotDefined()
         if not (point in visited):
             visited.append(point)
-        for child in problem.getSuccessors(point):
+        succs = problem.getSuccessors(point)
+        succs.reverse()
+        for child in succs:
             if not (child[0] in mapper):
                 pq.push(child[0], child[2]) #child has (xy, direction, weight)
                 mapper[child[0]] = point, child[1]
@@ -259,7 +261,37 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import PriorityQueue
+    pq = PriorityQueue()
+    # visited = []
+    mapper = {}
+    costs = {}
+    start = problem.getStartState()
+    mapper[start] = None
+    costs[start] = 0
+    pq.push(start, 0)
+
+    while not (pq.isEmpty()):
+        # print costs
+        point = pq.pop()
+        if problem.isGoalState(point):
+            current = point
+            l = []
+            while mapper[current] != None:
+                tup = mapper[current]
+                l.append(tup[1])
+                current = tup[0]
+            l.reverse()
+            print l
+            return l
+        for child in problem.getSuccessors(point):
+            if not child[0] in mapper:
+                cost = costs[point] + child[2]
+                if (child not in costs) or (cost < costs[child[0]]):
+                    costs[child[0]] = cost
+                    full_cost = cost + heuristic(child[0], problem)
+                    pq.push(child[0], full_cost)
+                    mapper[child[0]] = point, child[1]
 
 
 # Abbreviations
