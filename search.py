@@ -232,7 +232,7 @@ def DLS(problem, vertex, visited, path, depth, max_depth):
         return path
 
     elif (depth == max_depth):
-        return "cutoff"
+        return None
 
     if vertex not in visited:
         visited.append(vertex)
