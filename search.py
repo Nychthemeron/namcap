@@ -90,9 +90,39 @@ def depthFirstSearch(problem):
     from util import Stack
     
     st = Stack()
-    visited = []
-    p = dfsRecursive(problem, problem.getStartState(), st, visited, [])
-    return p
+
+
+
+    mapper = {}
+    mapper[problem.getStartState()] = None
+
+    st.push(problem.getStartState())
+    while not(st.isEmpty()):
+        vertex = st.pop()
+        
+        if (problem.isGoalState(vertex)):
+            c = vertex
+            l = []
+            while mapper[c] != None:
+                tup = mapper[c]
+                l.append(tup[1])
+                c = tup[0]
+            l.reverse()
+            print l
+            return l
+
+        else:
+            neigh = problem.getSuccessors(vertex)
+            neigh.reverse()
+            for child in neigh:
+                if child[0] not in mapper:
+                    st.push(child[0])
+                    mapper[child[0]] = (vertex, child[1])
+                    # print mapper
+                
+    # visited = []
+    # p = dfsRecursive(problem, problem.getStartState(), st, visited, [])
+    # return p
     
     # pathfind = {}
     # st.push(problem.getStartState())
@@ -167,13 +197,18 @@ def breadthFirstSearch(problem):
 
 def iterativeDeepeningSearch(problem):
     """Iterative Deepening version of DFS"""
-    from util import Stack
+    m_depth = 0
+    while True:
+        result = DLS(problem, problem.getStartState(), [], [], 0, m_depth)
+        if result != None:
+            print result
+            return result
+        else:
+            m_depth += 1
 
-    st = Stack()
-    visited = []
-    mapper = {}
-    # max_depth = 100
-    depth = 0
+
+"""   
+    #recursive function isn't working correctly...
     while True:
         result = DLS(problem, problem.getStartState(), st, visited, mapper, 0, depth)
         if result != None:
@@ -181,39 +216,41 @@ def iterativeDeepeningSearch(problem):
             return result
         else:
             #clear it and try again
-            st = Stack()
-            visited = []
-            mapper = {}
+            # st = Stack()
+            # # visited = []
+            # # mapper = {}
             depth += 1
 
     # util.raiseNotDefined()
+"""
 
-def DLS(problem, vertex, stack, visited, path, depth, max_depth):
+def DLS(problem, vertex, visited, path, depth, max_depth):
     # print "v: ", vertex, " m_d: ", max_depth
+    cutoff = False
     if (problem.isGoalState(vertex)):
         # print path
         return path
 
-    elif (depth is max_depth):
-        return None
+    elif (depth == max_depth):
+        return "cutoff"
 
-    elif (not (vertex in visited)):
+    if vertex not in visited:
         visited.append(vertex)
-        new_depth = depth + 1
-        next_v = problem.getSuccessors(vertex)
-        next_v.reverse() # to keep ordering
-        if len(next_v) > 0:
-            for child in next_v:
-                stack.push(child[0])
-                #copy path to avoid reassignment
-                newpath = []
-                for p in path:
-                    newpath.append(p)
-                newpath.append(child[1])
-                new_v = stack.pop()
-                #get our path if we hit
-                p = DLS(problem, new_v, stack, visited, newpath, new_depth, max_depth)
-                if p: return p
+
+    neigh = problem.getSuccessors(vertex)
+    neigh.reverse()
+    depth += 1
+    for child in neigh:
+        if child[0] not in visited:
+            newpath = []
+            for p in path:
+                newpath.append(p)
+            newpath.append(child[1])
+
+            p = DLS(problem, child[0], visited, newpath, depth, max_depth)
+            if p:
+                return p
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
