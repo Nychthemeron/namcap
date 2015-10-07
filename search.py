@@ -197,6 +197,42 @@ def breadthFirstSearch(problem):
 
 def iterativeDeepeningSearch(problem):
     """Iterative Deepening version of DFS"""
+    from util import Stack
+    
+    for max_depth in range(0, 10000000):
+        # print max_depth
+        st = Stack()
+        mapper = {}
+        mapper[(problem.getStartState(), 0)] = None #map of (childpos, depth): (parentpos, direction, depth)
+        st.push((problem.getStartState(), 0)) # stack of ((x,y) , depth)
+
+        while not(st.isEmpty()):
+            vertex = st.pop() #( (x,y) , depth )
+            depth = vertex[1]
+
+            if (problem.isGoalState(vertex[0])):
+                c = vertex
+                l = []
+                while mapper[c] != None:
+                    tup = mapper[c]
+                    l.append(tup[1])
+                    c = tup[0], tup[2]
+                l.reverse()
+                print l
+                return l
+
+            else:
+                n_depth = depth + 1 # new depth
+                if n_depth < max_depth:
+                    neigh = problem.getSuccessors(vertex[0])
+                    neigh.reverse()
+                    for child in neigh:
+                        if (child[0], n_depth) not in mapper:
+                            st.push((child[0], n_depth))
+                            mapper[(child[0], n_depth)] = (vertex[0], child[1], depth) 
+
+
+"""
     m_depth = 0
     while True:
         result = DLS(problem, problem.getStartState(), [], [], 0, m_depth)
@@ -205,23 +241,6 @@ def iterativeDeepeningSearch(problem):
             return result
         else:
             m_depth += 1
-
-
-"""   
-    #recursive function isn't working correctly...
-    while True:
-        result = DLS(problem, problem.getStartState(), st, visited, mapper, 0, depth)
-        if result != None:
-            print result
-            return result
-        else:
-            #clear it and try again
-            # st = Stack()
-            # # visited = []
-            # # mapper = {}
-            depth += 1
-
-    # util.raiseNotDefined()
 """
 
 def DLS(problem, vertex, visited, path, depth, max_depth):
@@ -248,7 +267,7 @@ def DLS(problem, vertex, visited, path, depth, max_depth):
             newpath.append(child[1])
 
             p = DLS(problem, child[0], visited, newpath, depth, max_depth)
-            if p:
+            if p != None:
                 return p
 
 
