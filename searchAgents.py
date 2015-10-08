@@ -350,7 +350,7 @@ class CornersProblem(search.SearchProblem):
                             temp = list(new_corners)
                             temp[i] = 1
                             new_corners = tuple(temp)
-                            print new_corners
+                            # print new_corners
                 nextState = (nextx, nexty), new_corners
                 cost = self.costFn(nextState)
                 successors.append( ( nextState, action, cost) )
@@ -390,7 +390,13 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    sums = []
+    for c in corners:
+        xy1 = state[0]
+        xy2 = c
+        sums.append( ( (xy1[0] - xy2[0]) ** 2 + (xy1[1] - xy2[1]) ** 2 ) )
+    
+    return min(sums) # weight of closest point
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
