@@ -90,9 +90,6 @@ def depthFirstSearch(problem):
     from util import Stack
     
     st = Stack()
-
-
-
     mapper = {}
     mapper[problem.getStartState()] = None
 
