@@ -110,7 +110,7 @@ def depthFirstSearch(problem):
 
         else:
             neigh = problem.getSuccessors(vertex)
-            neigh.reverse()
+            # neigh.reverse()
             for child in neigh:
                 if child[0] not in mapper:
                     st.push(child[0])
@@ -222,7 +222,7 @@ def iterativeDeepeningSearch(problem):
                 n_depth = depth + 1 # new depth
                 if n_depth < max_depth:
                     neigh = problem.getSuccessors(vertex[0])
-                    neigh.reverse()
+                    # neigh.reverse()
                     for child in neigh:
                         if (child[0], n_depth) not in mapper:
                             st.push((child[0], n_depth))
