@@ -395,7 +395,6 @@ def cornersHeuristic(state, problem):
         xy1 = state[0]
         xy2 = c
         sums.append( ( (xy1[0] - xy2[0]) ** 2 + (xy1[1] - xy2[1]) ** 2 ) )
-    
     return min(sums) # weight of closest point
 
 class AStarCornersAgent(SearchAgent):
@@ -490,7 +489,17 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    #idea: state is only as good as worst point from it, so we choose the best of the worst states
+    s = []
+    for f in foodGrid.asList():
+        xy1 = position
+        xy2 = f
+        s.append( ( abs(xy1[0] - xy2[0]) +  abs(xy1[1] - xy2[1]) ) )
+    if s:
+        return max(s)
+    return 0 
+
+    # return len(foodGrid.asList()) # this trivial solution reduces it to 12517!?
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
