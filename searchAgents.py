@@ -400,12 +400,12 @@ def cornersHeuristic(state, problem):
     for c in corners_left:
         xy1 = state[0]
         xy2 = c
-        # s = ( abs(xy1[0] - xy2[0]) ** 2 + abs(xy1[1] - xy2[1]) ** 2)
-        sums.append( ( abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1]) ) )
+        # s = ( abs(xy1[0] - xy2[0]) ** 2 +  abs(xy1[1] - xy2[1]) ** 2 ) ** 0.5
+        sums.append( ( abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])  ) )
         # sums += s
     if len(sums) == 0:
         return 0
-    return min(sums) + len(corners_left) # weight of closest point
+    return max(sums) + len(corners_left) # weight of closest point
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
