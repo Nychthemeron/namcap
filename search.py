@@ -111,6 +111,7 @@ def depthFirstSearch(problem):
         else:
             neigh = problem.getSuccessors(vertex)
             # neigh.reverse()
+            # neigh.sort()
             for child in neigh:
                 if child[0] not in mapper:
                     st.push(child[0])

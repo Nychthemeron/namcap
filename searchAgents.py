@@ -405,7 +405,7 @@ def cornersHeuristic(state, problem):
         # sums += s
     if len(sums) == 0:
         return 0
-    return max(sums) + len(corners_left) # weight of closest point
+    return max(sums) + len(corners_left)# weight of closest point
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -506,7 +506,7 @@ def foodHeuristic(state, problem):
         xy2 = f
         s.append( ( abs(xy1[0] - xy2[0]) +  abs(xy1[1] - xy2[1]) ) )
     if s:
-        return max(s) + len(foodGrid.asList())
+        return max(s) + len(foodGrid.asList())  
     return 0 
 
     # return len(foodGrid.asList()) # this trivial solution reduces it to 12517!?
