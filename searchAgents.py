@@ -259,7 +259,7 @@ class newSearchAgent(SearchAgent):
     """
     def __init__(self):
         self.searchFunction = search.uniformCostSearch
-        costFn = lambda pos: ((abs(pos[0] - 1) ** 2 + abs(pos[1] - 1) ** 2) ** .5) 
+        costFn = lambda pos: ((abs(pos[0] - 1)+ abs(pos[1] - 1)))
         self.searchType = lambda state: PositionSearchProblem(state, costFn)
 
 def manhattanHeuristic(position, problem, info={}):

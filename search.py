@@ -216,6 +216,7 @@ def iterativeDeepeningSearch(problem):
                     l.append(tup[1])
                     c = tup[0], tup[2]
                 l.reverse()
+                print "max_depth: ", max_depth
                 print l
                 return l
 
